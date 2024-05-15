@@ -30,3 +30,13 @@ Start the server
   npm run dev
 ```
 
+
+## Screenshots
+
+For login as admin you need to access this link:
+```bash
+http://localhost:3000/cpanel
+```
+![Login Admin](https://res.cloudinary.com/dwravlqx0/image/upload/v1715810430/dy0vgmgryw7zjfagtdwi.png)
+
+

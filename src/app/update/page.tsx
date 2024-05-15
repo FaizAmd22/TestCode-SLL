@@ -29,7 +29,7 @@ const Product = () => {
               theme ? "bg-lightcard" : "bg-darkcard"
             }`}
           >
-            <h2 className="text-2xl font-bold mb-6">Add Product</h2>
+            <h2 className="text-2xl font-bold mb-6">Update Product</h2>
             <FormAdd />
           </div>
         </div>

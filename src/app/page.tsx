@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import Tippy from "@tippyjs/react";
 
-
 export default function Home() {
   const theme = useThemeDarkStore((state) => state.themes);
   const setProduct = useProductStore((x) => x.setProducts);
@@ -40,7 +39,7 @@ export default function Home() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("token")
+    sessionStorage.removeItem("token");
 
     toast.success("Success add product!", {
       position: "top-right",
@@ -55,9 +54,9 @@ export default function Home() {
     });
 
     setTimeout(() => {
-      router.replace("/")
+      window.location.reload();
     }, 1000);
-  }
+  };
 
   return (
     <div className="xl:px-24 md:px-10 px-5 py-14" style={{ width: "100%" }}>
@@ -79,7 +78,10 @@ export default function Home() {
 
         {token && (
           <div>
-            <button onClick={handleLogout} className="md:mr-7 py-3 px-10 rounded-full bg-darkfont text-lightfont font-bold">
+            <button
+              onClick={handleLogout}
+              className="md:mr-7 py-3 px-10 rounded-full bg-darkfont text-lightfont font-bold"
+            >
               Logout
             </button>
           </div>
@@ -106,7 +108,7 @@ export default function Home() {
       </div>
 
       {isPagination && <Pagination />}
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }

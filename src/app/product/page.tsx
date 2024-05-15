@@ -5,7 +5,7 @@ import FormAdd from "./components/formAdd";
 import { useThemeDarkStore } from "@/store/useThemeDark";
 import { useRouter } from "next/navigation";
 
-const Update = () => {
+const Product = () => {
   const router = useRouter();
   const token = sessionStorage.getItem("token");
   const theme = useThemeDarkStore((x) => x.themes);
