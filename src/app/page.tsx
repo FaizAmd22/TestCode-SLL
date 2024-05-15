@@ -1,113 +1,113 @@
-import Image from "next/image";
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
+
+import CardItem from "@/components/cardItem";
+import DetailModal from "@/components/detailModal";
+import Filter from "@/components/filter";
+import Pagination from "@/components/pagination";
+import { useGetProducts } from "@/hook/useGetProducts";
+import { usefilterStore } from "@/store/useFilter";
+import { useOpenModalStore } from "@/store/useOpenModal";
+import { usePaginationStore } from "@/store/usePagination";
+import { useProductStore } from "@/store/useProductStore";
+import { useThemeDarkStore } from "@/store/useThemeDark";
+import { FaPlus } from "react-icons/fa";
+import { useEffect } from "react";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+
 
 export default function Home() {
+  const theme = useThemeDarkStore((state) => state.themes);
+  const setProduct = useProductStore((x) => x.setProducts);
+  const setModal = useOpenModalStore((x) => x.setModal);
+  const isModal = useOpenModalStore((x) => x.modal);
+  const { isLoading, dataProducts } = useGetProducts();
+  const filtered = usefilterStore((x) => x.filtered);
+  const setFiltered = usefilterStore((x) => x.setFiltered);
+  const isPagination = usePaginationStore((x) => x.isPagination);
+  const token = sessionStorage.getItem("token");
+  const router = useRouter();
+
+  useEffect(() => {
+    setFiltered(dataProducts);
+  }, []);
+
+  const handleOpen = (data: any) => {
+    setProduct(data);
+    setModal(true);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("token")
+
+    toast.success("Success add product!", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+    });
+
+    setTimeout(() => {
+      router.replace("/")
+    }, 1000);
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="xl:px-24 md:px-10 px-5 py-14" style={{ width: "100%" }}>
+      <div className="flex justify-between">
+        <div className="flex gap-5 items-center mb-6">
+          <h1 className="text-4xl font-bold">Products</h1>
+          {token && (
+            <Tippy content="Add Product" placement="right">
+              <button
+                type="button"
+                className="text-2xl font-bold bg-darkfont text-lightfont w-9 h-9 flex justify-center items-center rounded-full"
+                onClick={() => router.push("/product")}
+              >
+                <FaPlus />
+              </button>
+            </Tippy>
+          )}
         </div>
+
+        {token && (
+          <div>
+            <button onClick={handleLogout} className="md:mr-7 py-3 px-10 rounded-full bg-darkfont text-lightfont font-bold">
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
+      <Filter />
+
+      {isModal && <DetailModal />}
+      <div
+        className="grid 2xl:grid-cols-3 grid-cols-2 gap-20 mt-7 md:pr-5 pt-4 pb-9 overflow-y-auto"
+        style={{ height: "64vh", scrollbarWidth: "thin" }}
+      >
+        {filtered.map((data: any, index: number) => {
+          return (
+            <button
+              onClick={() => handleOpen(data)}
+              className="col-span-1"
+              key={index}
+            >
+              <CardItem data={data} />
+            </button>
+          );
+        })}
       </div>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      {isPagination && <Pagination />}
+      <ToastContainer/>
+    </div>
   );
 }
