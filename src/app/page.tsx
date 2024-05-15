@@ -13,10 +13,9 @@ import { useProductStore } from "@/store/useProductStore";
 import { useThemeDarkStore } from "@/store/useThemeDark";
 import { FaPlus } from "react-icons/fa";
 import { useEffect } from "react";
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast, Bounce } from "react-toastify";
+import Tippy from "@tippyjs/react";
 
 
 export default function Home() {

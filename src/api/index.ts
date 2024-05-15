@@ -7,7 +7,7 @@ const Api = axios.create({
 })
 
 export const ApiPost = axios.create({
-  baseURL: "https://test.api.sahabatlautlestari.com",
+  baseURL: process.env.NEXT_PUBLIC_URL,
   headers: {
     Authorization: `Bearer ${token}`,
     'Content-type': 'application/json'
